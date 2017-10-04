@@ -1,0 +1,9 @@
+[Unit]
+Description=DHCP Client
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/udhcpc
+
+[Install]
+WantedBy=multi-user.target
