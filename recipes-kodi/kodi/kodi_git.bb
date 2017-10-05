@@ -15,6 +15,7 @@ DEPENDS = " \
             curl-native \
             gperf-native \
             jsonschemabuilder-native \
+            texturepacker-native \
             nasm-native \
             swig-native \
             yasm-native \
@@ -70,8 +71,6 @@ DEPENDS = " \
             alsa-plugins \
           "
 
-ASSUME_PROVIDED += "java-native \
-"
 
 SRCREV = "7fc6da0c87414d2ba20055e084adc10546a15b7c"
 PV = "17.4+gitr${SRCPV}"
@@ -96,14 +95,6 @@ RPROVIDES_${PN} += "virtual/kodi"
 PROVIDES += "kodi"
 RPROVIDES_${PN} += "kodi"
 RDEPENDS_${PN} += "hd-v3ddriver-hd51 kodi-startup"
-
-
-OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
-
-EXTRA_OECONF += " \
-    --with-platform=v3d-cortexa15 \
-    --with-ffmpeg=v3d \
-"
 
 inherit autotools-brokensep gettext pythonnative
 
@@ -137,9 +128,12 @@ EXTRA_OECONF = " \
     --enable-libusb \
     --enable-alsa \
     --disable-optical-drive \
-    --enable-texturepacker=no \
+    --enable-texturepacker=yes \
     --disable-lirc \
     --disable-dbus \
+"
+
+EXTRA_OECONF += " \
     --with-platform=v3d-cortexa15 \
     --with-ffmpeg=v3d \
 "
@@ -164,8 +158,6 @@ def enable_glew(bb, d):
 
 
 do_configure() {
-  export JAVA="/usr/bin/java"
-  export UNZIP="/usr/bin/unzip"
     ( for i in $(find ${S} -name "configure.*" ) ; do
        cd $(dirname $i) && gnu-configize --force || true
     done )
