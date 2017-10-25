@@ -15,6 +15,7 @@ DEPENDS = " \
             curl-native \
             gperf-native \
             jsonschemabuilder-native \
+            texturepacker-native \
             nasm-native \
             swig-native \
             yasm-native \
@@ -100,9 +101,6 @@ PROVIDES += "kodi"
 RPROVIDES_${PN} += "kodi"
 RDEPENDS_${PN} += "hd-v3ddriver-hd51 kodi-startup exteplayer3"
 
-
-OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
-
 inherit autotools-brokensep gettext pythonnative
 
 S = "${WORKDIR}/git"
@@ -136,7 +134,7 @@ EXTRA_OECONF = " \
     --enable-libusb \
     --enable-alsa \
     --disable-optical-drive \
-    --enable-texturepacker=no \
+    --enable-texturepacker=yes \
     --disable-lirc \
     --with-ffmpeg=shared \
     --disable-dbus \
