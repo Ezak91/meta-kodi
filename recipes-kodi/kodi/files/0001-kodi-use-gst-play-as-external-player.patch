@@ -1,0 +1,76 @@
+From 0eb5419435c280aec83cf60e1db1ffd4f1c394c2 Mon Sep 17 00:00:00 2001
+From: Markus Volk <f_l_k@t-online.de>
+Date: Thu, 5 Oct 2017 08:49:31 +0200
+Subject: [PATCH] kodi: use gst-play as external player
+
+Signed-off-by: Markus Volk <f_l_k@t-online.de>
+---
+ system/playercorefactory.xml | 55 +++++++++++++++-----------------------------
+ 1 file changed, 18 insertions(+), 37 deletions(-)
+
+diff --git a/system/playercorefactory.xml b/system/playercorefactory.xml
+index be6b7219ab..dd86c5606e 100644
+--- a/system/playercorefactory.xml
++++ b/system/playercorefactory.xml
+@@ -1,40 +1,21 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <playercorefactory>
+-  <players>
+-    <!-- These are compiled-in as re-ordering them would break scripts
+-    The following aliases may also be used:
+-      audiodefaultplayer, videodefaultplayer, videodefaultVideoPlayer
+-    <player name="VideoPlayer" audio="true" video="true" />
+-    <player name="VideoPlayer" /> placeholder for MPlayer
+-    <player name="PAPlayer" audio="true" />
+-    -->
+-  </players>
+-
+-  <rules name="system rules">
+-    <rule name="mms/udp" protocols="mms|mmsh|udp" player="VideoPlayer" />
+-    <rule name="lastfm/shout" protocols="lastfm|shout" player="PAPlayer" />
+-    <rule name="rtmp" protocols="rtmp" player="videodefaultplayer" />
+-
+-    <!-- VideoPlayer can play standard rtsp streams -->
+-    <rule name="rtsp" protocols="rtsp" filetypes="!(rm|ra)"  player="PAPlayer" />
+-
+-    <!-- Internet streams -->
+-    <rule name="streams" internetstream="true">
+-      <rule name="aacp/sdp" mimetypes="audio/aacp|application/sdp" player="VideoPlayer" />
+-      <rule name="mp2" mimetypes="application/octet-stream" filetypes="mp2" player="PAPlayer" />
+-    </rule>
+-
+-    <!-- DVDs -->
+-    <rule name="dvd" dvd="true" player="VideoPlayer" />
+-    <rule name="dvdimage" dvdimage="true" player="VideoPlayer" />
+-
+-    <!-- Only VideoPlayer can handle these normally -->
+-    <rule name="sdp/asf" filetypes="sdp|asf" player="VideoPlayer" />
+-
+-    <!-- Pass these to VideoPlayer as we do not know if they are audio or video -->
+-    <rule name="nsv" filetypes="nsv" player="VideoPlayer" />
+-
+-    <!-- pvr radio channels should be played by VideoPlayer because they need buffering -->
+-    <rule name="radio" filetypes="pvr" filename=".*/radio/.*" player="VideoPlayer" />
+-  </rules>
++ <players>
++   <player name="gst-play" type="ExternalPlayer" audio="true" video="true">
++     <filename>/usr/bin/gst-play-1.0</filename>
++     <args>"{1}"</args>
++     <hidexbmc>true</hidexbmc>
++   </player>
++ </players>
++ <rules action="prepend">
++  <rule filetypes="mkv" player="gst-play"/>
++  <rule filetypes="ts" player="gst-play"/>
++  <rule filetypes="avi" player="gst-play"/>
++  <rule filetypes="mov" player="gst-play"/>
++  <rule filetypes="mpeg" player="gst-play"/>
++  <rule filetypes="mpg" player="gst-play"/>
++  <rule filetypes="mp4" player="gst-play"/>
++  <rule filetypes="divx" player="gst-play"/>
++  <rule filetypes="vob" player="gst-play"/>
++ </rules>
+ </playercorefactory>
+-- 
+2.13.3
+

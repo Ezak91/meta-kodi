@@ -27,6 +27,7 @@ DEPENDS = " \
             enca \
             expat \
             faad2 \
+            ffmpeg \
             fontconfig \
             fribidi \
             giflib \
@@ -57,6 +58,7 @@ DEPENDS = " \
             sqlite3 \
             taglib \
             virtual/egl \
+            virtual/libgles2 \
             virtual/libsdl \
             wavpack \
             yajl \
@@ -70,8 +72,6 @@ DEPENDS = " \
             alsa-plugins \
           "
 
-ASSUME_PROVIDED += "java-native \
-"
 
 SRCREV = "7fc6da0c87414d2ba20055e084adc10546a15b7c"
 PV = "17.4+gitr${SRCPV}"
@@ -83,8 +83,11 @@ SRC_URI = "git://github.com/xbmc/xbmc.git;branch=Krypton \
            file://0009-build-Add-support-for-musl-triplets.patch \
            file://0010-RssReader-Fix-compiler-warning-comparing-pointer-to-.patch \
            file://0011-Let-configure-pass-on-unknown-architectures-setting-.patch \
-           file://v3d-platform.patch \
+           file://EGLNativeTypeV3D-nxpl.patch \
            file://brcmstb-settings.patch \
+           file://kodi-platform-support.patch \
+           file://input-devices.patch \
+           file://exteplayer3.patch \
 "
 
 SRC_URI_append_libc-musl = " \
@@ -95,15 +98,10 @@ PROVIDES += "virtual/kodi"
 RPROVIDES_${PN} += "virtual/kodi"
 PROVIDES += "kodi"
 RPROVIDES_${PN} += "kodi"
-RDEPENDS_${PN} += "hd-v3ddriver-hd51 kodi-startup"
+RDEPENDS_${PN} += "hd-v3ddriver-hd51 kodi-startup exteplayer3"
 
 
 OECMAKE_FIND_ROOT_PATH_MODE_PROGRAM = "BOTH"
-
-EXTRA_OECONF += " \
-    --with-platform=v3d-cortexa15 \
-    --with-ffmpeg=v3d \
-"
 
 inherit autotools-brokensep gettext pythonnative
 
@@ -118,7 +116,7 @@ ACCEL_x86-64 = "vaapi vdpau"
 
 PACKAGECONFIG ??= "${ACCEL} mysql \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'x11', '', d)} \
-                   ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'opengl', 'openglesv2', d)}"
+"
 
 PACKAGECONFIG[opengl] = "--enable-gl,--disable-gl,"
 PACKAGECONFIG[openglesv2] = "--enable-gles,--disable-gles,virtual/egl"
@@ -130,6 +128,7 @@ PACKAGECONFIG[pulseaudio] = "--enable-pulse,--disable-pulse,pulseaudio"
 PACKAGECONFIG[lcms] = "--enable-lcms2,--disable-lcms2,lcms"
 
 EXTRA_OECONF = " \
+    --with-gpu=v3d \
     --disable-debug \
     --disable-libcap \
     --disable-ccache \
@@ -139,9 +138,8 @@ EXTRA_OECONF = " \
     --disable-optical-drive \
     --enable-texturepacker=no \
     --disable-lirc \
+    --with-ffmpeg=shared \
     --disable-dbus \
-    --with-platform=v3d-cortexa15 \
-    --with-ffmpeg=v3d \
 "
 
 FULL_OPTIMIZATION_armv7a = "-fexpensive-optimizations -fomit-frame-pointer -O3 -ffast-math"
@@ -164,8 +162,6 @@ def enable_glew(bb, d):
 
 
 do_configure() {
-  export JAVA="/usr/bin/java"
-  export UNZIP="/usr/bin/unzip"
     ( for i in $(find ${S} -name "configure.*" ) ; do
        cd $(dirname $i) && gnu-configize --force || true
     done )

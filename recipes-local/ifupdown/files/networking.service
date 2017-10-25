@@ -1,9 +1,0 @@
-[Unit]
-Description=ifup network start
-
-[Service]
-Type=notify
-ExecStart=/sbin/ifup -a
-
-[Install]
-WantedBy=multi-user.target

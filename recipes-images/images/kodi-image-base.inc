@@ -23,29 +23,23 @@ IMAGE_INSTALL += " \
 	bash \
 	bzip2 \
 	cifs-utils \
-	coreutils \
 	dosfstools \
 	e2fsprogs-e2fsck \
 	e2fsprogs-mke2fs \
 	e2fsprogs-tune2fs \
 	etckeeper \
-	gawk \
-	glibc-charmaps \
-	glibc-binary-localedata-de-de \
-	glibc-gconvs \
-	glibc-localedatas \
+	gstreamer1.0-plugins-base \
+	gstreamer1.0-plugins-good \
+	gstreamer1.0-plugins-bad \
+	gstreamer1.0-plugins-ugly \
+	gstreamer1.0-plugin-dvbmediasink \
+	gstreamer1.0-libav \
 	gzip \
 	hdparm \
 	image-config \
 	ifupdown \
 	kernel-modules \
-	libevent \
 	libusb1 \
-	localedef \
-	mc \
-	mc-fish \
-	mc-helpers \
-	mc-helpers-perl \
 	minidlna \
 	nano \
 	nfs-utils \
@@ -57,11 +51,8 @@ IMAGE_INSTALL += " \
 	openssl \
 	opkg \
 	oscam \
-	parted \
-	procps \
 	rpcbind \
 	samba \
-	sed \
 	tzdata \
 	tzdata-europe \
 	udev-extraconf \
